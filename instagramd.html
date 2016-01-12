@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <title></title>
+</head>
+<body>
+
+    <script>
+        var picArray = [];
+        var posts = [];
+        function recurs() {
+            return $.ajax({
+                cache: false,
+                type: 'GET',
+                dataType: 'jsonp',
+                //url: "https://api.instagram.com/v1/tags/dogs/media/recent?client_id=7e8c774a420046d7b8456d80447970ae&callback=?",
+                url: "https://api.instagram.com/v1/tags/nofilter/media/recent?client_id=734815245fb94545b25aaf76899bd37a&callback=?",
+                success: function (result) {
+                    //$('body').html("");
+                    $.each(result.data, function (i, post) {
+                        if ($.inArray(post.id, picArray) == -1) {
+                            //$('table').append("<tr><td><img src='" + post.images.standard_resolution.url + post.id + "'\>");
+                            $('body').append("<p><img src='" + post.images.standard_resolution.url + "' onclick='location.href =\"" + post.images.standard_resolution.url + "\"'/></p>" + "<p>'" + post.id
+                                + "'</p>" + "<p>'" + post.caption.text + "'</p>" + "<p></p>")
+                            //$('body').append("<p>'" + post.id + "'</p>")
+                            picArray.push(post.id);
+                            posts.push(post);
+                        }
+                        else {
+
+                            console.log("Duplicates");
+                      
+
+                        }
+                    });
+                }
+            });
+        }
+        function foo() {
+            return recurs().then(
+              function (data) {
+                  return foo();
+              });
+        }
+
+        foo();
+        
+
+    </script>
+</body>
+</html>
